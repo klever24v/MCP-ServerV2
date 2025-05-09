@@ -131,8 +131,50 @@ Todas las herramientas están disponibles mediante el endpoint:
   }
 }
 ```
+## 🛡️ Validación con Zod
+
+### ¿Qué es Zod?
+
+[Zod](https://github.com/colinhacks/zod) es una biblioteca de validación y parsing de esquemas para TypeScript. Permite definir estructuras de datos de forma declarativa y luego validar que los datos cumplan con esos esquemas. Es especialmente útil al trabajar con **Modelos de Lenguaje (LLMs)**, donde la salida puede variar o no seguir una estructura estricta.
+
+### ¿Para qué se usa en este proyecto?
+
+Zod se utiliza para validar las respuestas generadas por el modelo LLM y asegurarse de que cumplen con el formato esperado. Esto permite:
+
+- Detectar errores de estructura en tiempo de ejecución.
+- Garantizar que la información recibida sea procesable por otras partes del sistema.
+- Mejorar la robustez de los agentes o pipelines basados en LLM.
 
 ---
+
+## 📦 Instalación
+
+```bash
+npm install zod
+
+---
+Usamos Zod para definir y validar esta estructura:
+import { z } from "zod";
+
+// Definición del esquema esperado
+const TaskSchema = z.object({
+  title: z.string(),
+  completed: z.boolean(),
+});
+
+// Ejemplo de salida de un LLM (como texto JSON)
+const llmOutput = `{
+  "title": "Escribir documentación",
+  "completed": false
+}`;
+
+try {
+  const parsed = TaskSchema.parse(JSON.parse(llmOutput));
+  console.log("✅ Datos válidos:", parsed);
+} catch (err) {
+  console.error("❌ Validación fallida:", err);
+}
+
 
 ## ⚙️ Configuración `.env`
 
